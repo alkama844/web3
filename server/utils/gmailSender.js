@@ -120,14 +120,24 @@ export async function sendEmail(formData) {
     const missingEnvVars = requiredEnvVars.filter(varName => !process.env[varName]);
     
     if (missingEnvVars.length > 0) {
-      throw new Error(`Missing required environment variables: ${missingEnvVars.join(', ')}`);
+      logger.error('Missing environment variables', { missingEnvVars });
+      throw new Error(`Missing required environment variables: ${missingEnvVars.join(', ')}. Please check your .env file.`);
     }
 
     // Get fresh access token
-    const { credentials } = await oauth2Client.refreshAccessToken();
-    oauth2Client.setCredentials(credentials);
+    try {
+      const { credentials } = await oauth2Client.refreshAccessToken();
+      oauth2Client.setCredentials(credentials);
+      logger.info('OAuth2 token refreshed successfully', { emailId });
+    } catch (authError) {
+      logger.error('OAuth2 authentication failed', { 
+        emailId, 
+        error: authError.message,
+        hint: 'Check CLIENT_ID, CLIENT_SECRET, and REFRESH_TOKEN in .env file'
+      });
+      throw new Error(`Gmail authentication failed: ${authError.message}. Please verify your OAuth2 credentials.`);
+    }
 
-    logger.info('OAuth2 token refreshed successfully', { emailId });
 
     // Prepare template data
     const templateData = {
@@ -142,9 +152,16 @@ export async function sendEmail(formData) {
     };
 
     // Load and compile template
-    const template = loadTemplate(formData.template_id);
-    const htmlContent = template(templateData);
-    const textContent = htmlToText(htmlContent);
+    let htmlContent, textContent;
+    try {
+      const template = loadTemplate(formData.template_id);
+      htmlContent = template(templateData);
+      textContent = htmlToText(htmlContent);
+      logger.info('Email template processed successfully', { emailId, template: formData.template_id });
+    } catch (templateError) {
+      logger.error('Template processing failed', { emailId, error: templateError.message });
+      throw new Error(`Template processing failed: ${templateError.message}`);
+    }
 
     // Create email subject
     const emailSubject = `New Form Submission: ${formData.subject}`;
@@ -162,12 +179,24 @@ export async function sendEmail(formData) {
     const encodedMessage = Buffer.from(emailMessage).toString('base64url');
 
     // Send email via Gmail API
-    const result = await gmail.users.messages.send({
-      userId: 'me',
-      requestBody: {
-        raw: encodedMessage,
-      },
-    });
+    let result;
+    try {
+      result = await gmail.users.messages.send({
+        userId: 'me',
+        requestBody: {
+          raw: encodedMessage,
+        },
+      });
+      logger.info('Gmail API send successful', { emailId, messageId: result.data.id });
+    } catch (gmailError) {
+      logger.error('Gmail API send failed', { 
+        emailId, 
+        error: gmailError.message,
+        code: gmailError.code,
+        hint: 'Check Gmail API permissions and TO_EMAIL address'
+      });
+      throw new Error(`Gmail send failed: ${gmailError.message}. Please check Gmail API permissions.`);
+    }
 
     logger.info('Email sent successfully', {
       emailId,
@@ -202,6 +231,7 @@ export async function sendEmail(formData) {
       details: {
         timestamp: new Date().toISOString(),
         submissionId: formData.submissionId
+        hint: 'Check server logs for detailed error information'
       }
     };
   }

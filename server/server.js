@@ -215,10 +215,24 @@ app.use((err, req, res, next) => {
 // Start server
 app.listen(PORT, () => {
   logger.info(`🚀 Server running on port ${PORT}`);
-  logger.info(`📧 Email service ready with Gmail API`);
+  
+  // Check if Gmail API is configured
+  const requiredEnvVars = ['CLIENT_ID', 'CLIENT_SECRET', 'REFRESH_TOKEN', 'TO_EMAIL'];
+  const missingEnvVars = requiredEnvVars.filter(varName => !process.env[varName]);
+  
+  if (missingEnvVars.length > 0) {
+    logger.warn(`⚠️  Missing Gmail API configuration: ${missingEnvVars.join(', ')}`);
+    logger.warn(`📝 Please update your .env file with the missing variables`);
+    logger.warn(`📚 See USERGUIDE.md for setup instructions`);
+  } else {
+    logger.info(`📧 Gmail API configured and ready`);
+  }
+  
   logger.info(`🛡️ Security features: ${ENABLE_RATE_LIMITING ? 'Rate limiting enabled' : 'Rate limiting disabled'}`);
   logger.info(`🌐 CORS: ${ENABLE_STRICT_CORS ? `Restricted to ${process.env.FRONTEND_DOMAIN || 'localhost'}` : 'Open to all origins'}`);
   logger.info(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
+  logger.info(`🔗 Health check: http://localhost:${PORT}/health`);
+  logger.info(`📋 API endpoint: http://localhost:${PORT}/submit-form`);
 });
 
 // Graceful shutdown

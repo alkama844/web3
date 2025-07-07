@@ -229,10 +229,11 @@ router.post('/submit-form', async (req, res) => {
 
       return res.status(500).json({
         success: false,
-        error: 'Failed to send email',
+        error: emailResult.error || 'Failed to send email',
         code: 'EMAIL_SEND_ERROR',
         submissionId,
-        details: process.env.NODE_ENV === 'production' ? undefined : emailResult.details
+        details: process.env.NODE_ENV === 'production' ? undefined : emailResult.details,
+        hint: 'Please check your Gmail API configuration in the .env file'
       });
     }
 
@@ -247,7 +248,7 @@ router.post('/submit-form', async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Form submitted successfully',
+      message: 'Form submitted and email sent successfully!',
       submissionId,
       messageId: emailResult.messageId,
       processingTime,
@@ -268,7 +269,8 @@ router.post('/submit-form', async (req, res) => {
       error: 'Internal server error',
       code: 'INTERNAL_ERROR',
       submissionId,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      hint: 'Please check server logs for detailed error information'
     });
   }
 });

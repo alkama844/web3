@@ -302,6 +302,11 @@ function App() {
                       <strong>Error:</strong> {response.error}
                     </p>
                   )}
+                  {response.hint && (
+                    <p className="text-amber-700 bg-amber-50 p-2 rounded">
+                      <strong>💡 Hint:</strong> {response.hint}
+                    </p>
+                  )}
                   {response.submissionId && (
                     <p className="text-green-700">
                       <strong>Submission ID:</strong> {response.submissionId}
@@ -309,7 +314,7 @@ function App() {
                   )}
                   {response.messageId && (
                     <p className="text-green-700">
-                      <strong>Email ID:</strong> {response.messageId}
+                      <strong>Gmail Message ID:</strong> {response.messageId}
                     </p>
                   )}
                   {response.processingTime && (
@@ -339,6 +344,11 @@ function App() {
               <div className="text-center py-12 text-gray-500">
                 <Send className="w-12 h-12 mx-auto mb-4 opacity-50" />
                 <p>Submit the form to see the API response here</p>
+                <div className="mt-4 p-4 bg-blue-50 rounded-lg text-sm text-blue-700">
+                  <p><strong>📝 Setup Required:</strong></p>
+                  <p>To send emails, configure your Gmail API credentials in the server/.env file</p>
+                  <p>See USERGUIDE.md for detailed setup instructions</p>
+                </div>
               </div>
             )}
 
@@ -351,6 +361,7 @@ function App() {
                 <p><strong>Content-Type:</strong> application/json</p>
                 <p><strong>Required fields:</strong> name, email, subject, message</p>
                 <p><strong>Optional fields:</strong> phone, company, template_id</p>
+                <p><strong>⚠️ Note:</strong> Gmail API must be configured for email sending to work</p>
               </div>
             </div>
           </div>
