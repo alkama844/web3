@@ -91,35 +91,30 @@ if (ENABLE_RATE_LIMITING && FORM_RATE_LIMIT_MAX > 0) {
   logger.info('Rate limiting disabled - unlimited access enabled');
 }
 
-// CORS configuration
+// CORS configuration - Simplified for production
 const corsOptions = {
   origin: function (origin, callback) {
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
     
-    // If strict CORS is disabled, allow all origins
+    // If strict CORS is disabled or FRONTEND_DOMAIN is *, allow all origins
     if (!ENABLE_STRICT_CORS || process.env.FRONTEND_DOMAIN === '*') {
       return callback(null, true);
     }
     
+    // Define allowed origins
     const allowedOrigins = [
       process.env.FRONTEND_DOMAIN,
       'http://localhost:3000',
       'http://localhost:5173',
       'http://127.0.0.1:3000',
+      'http://127.0.0.1:10000',
+      'https://web3pro.onrender.com',
       'http://127.0.0.1:5173'
-      // Allow WebContainer URLs
-      /.*\.webcontainer-api\.io$/,
-      /.*\.local-credentialless\.webcontainer-api\.io$/,
-      // Allow any origin in development
-      ...(process.env.NODE_ENV !== 'production' ? ['*'] : [])
     ].filter(Boolean);
     
-    if (allowedOrigins.includes(origin) || 
-        allowedOrigins.some(allowed => 
-          allowed instanceof RegExp ? allowed.test(origin) : false
-        ) ||
-        allowedOrigins.includes('*')) {
+    // Check if origin is allowed
+    if (allowedOrigins.includes(origin) || allowedOrigins.includes('*')) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
