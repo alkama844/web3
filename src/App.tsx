@@ -38,13 +38,8 @@ function App() {
 
   // Get the current WebContainer API URL
   const getApiUrl = () => {
-    const currentUrl = window.location.href;
-    if (currentUrl.includes('webcontainer-api.io')) {
-      // Extract the base URL and change port to 3000
-      const baseUrl = currentUrl.split('--')[0];
-      return `${baseUrl}--3000--96435430.local-credentialless.webcontainer-api.io`;
-    }
-    return 'http://localhost:3000';
+    // Use the live Render API URL
+    return 'https://web3pro.onrender.com';
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
