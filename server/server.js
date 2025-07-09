@@ -172,6 +172,23 @@ app.get('/health', (req, res) => {
   });
 });
 
+// Root endpoint
+app.get('/', (req, res) => {
+  res.json({
+    success: true,
+    message: 'Express.js Form Backend API',
+    version: '1.0.0',
+    status: 'running',
+    endpoints: {
+      health: '/health',
+      submit: '/submit-form',
+      stats: '/stats'
+    },
+    documentation: 'https://github.com/yourusername/yourrepo#readme',
+    timestamp: new Date().toISOString()
+  });
+});
+
 // API routes
 app.use('/', formRoutes);
 

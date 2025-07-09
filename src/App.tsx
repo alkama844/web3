@@ -90,12 +90,12 @@ function App() {
 
   const testConnection = async () => {
     try {
-      const apiUrl = `${getApiUrl()}/health`;
+      const apiUrl = `${getApiUrl()}/`;
       const response = await fetch(apiUrl);
       const data = await response.json();
       setResponse({
         success: true,
-        message: `Server is healthy! Status: ${data.status}, Uptime: ${Math.round(data.uptime)}s`,
+        message: `API is live! ${data.message} - Status: ${data.status}`,
       });
     } catch (error) {
       setResponse({
