@@ -6,6 +6,7 @@ import xss from 'xss';
 import dotenv from 'dotenv';
 import winston from 'winston';
 import formRoutes from './routes/formRoutes.js';
+import aboutRoutes from './routes/aboutRoutes.js';
 
 // Load environment variables first
 dotenv.config();
@@ -208,6 +209,7 @@ app.get('/', (req, res) => {
 
 // API routes
 app.use('/', formRoutes);
+app.use('/', aboutRoutes);
 
 // 404 handler
 app.use((req, res) => {
