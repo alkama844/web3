@@ -90,12 +90,12 @@ function App() {
 
   const testConnection = async () => {
     try {
-      const apiUrl = `${getApiUrl()}/status`;
+      const apiUrl = `${getApiUrl()}/`;
       const response = await fetch(apiUrl);
       const data = await response.json();
       setResponse({
         success: true,
-        message: `API Status: ${data.status} - ${data.message} (v${data.version})`,
+        message: `API Status: ${data.status} - ${data.message} (v${data.version}) - Endpoints: ${Object.keys(data.endpoints).join(', ')}`,
       });
     } catch (error) {
       setResponse({
@@ -390,7 +390,7 @@ function App() {
             <div className="mt-8 p-6 bg-gradient-to-r from-gray-50 to-slate-50 rounded-xl border border-gray-200">
               <h4 className="font-semibold text-gray-900 mb-2">Using this API from another site:</h4>
               <div className="text-sm text-gray-600 space-y-2">
-                <p><strong>Status:</strong> <code className="bg-white px-2 py-1 rounded">{getApiUrl()}/status</code></p>
+                <p><strong>Root/Status:</strong> <code className="bg-white px-2 py-1 rounded">{getApiUrl()}/</code></p>
                 <p><strong>Health:</strong> <code className="bg-white px-2 py-1 rounded">{getApiUrl()}/health</code></p>
                 <p><strong>Endpoint:</strong> <code className="bg-white px-2 py-1 rounded">{getApiUrl()}/submit-form</code></p>
                 <p><strong>Method:</strong> POST</p>
