@@ -118,12 +118,12 @@ function App() {
           <div className="flex justify-center gap-4 mb-8">
             <button
               onClick={testConnection}
-              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-semibold"
             >
-              Test API Connection
+              🚀 Test Live API
             </button>
-            <div className="px-4 py-2 bg-gray-100 rounded-lg text-sm text-gray-600">
-              API URL: {getApiUrl()}
+            <div className="px-6 py-3 bg-blue-100 rounded-lg text-sm text-blue-800 font-mono">
+              🌐 Live API: {getApiUrl()}
             </div>
           </div>
         </div>
