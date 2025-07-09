@@ -230,7 +230,7 @@ export async function sendEmail(formData) {
       emailId,
       details: {
         timestamp: new Date().toISOString(),
-        submissionId: formData.submissionId
+        submissionId: formData.submissionId,
         hint: 'Check server logs for detailed error information'
       }
     };
