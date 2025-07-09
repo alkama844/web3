@@ -172,8 +172,8 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Root endpoint
-app.get('/', (req, res) => {
+// Status endpoint with API information
+app.get('/status', (req, res) => {
   res.json({
     success: true,
     message: 'Express.js Form Backend API',
@@ -182,9 +182,26 @@ app.get('/', (req, res) => {
     endpoints: {
       health: '/health',
       submit: '/submit-form',
-      stats: '/stats'
+      stats: '/stats',
+      status: '/status'
     },
     documentation: 'https://github.com/yourusername/yourrepo#readme',
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Root endpoint - Simple welcome message
+app.get('/', (req, res) => {
+  res.json({
+    success: true,
+    message: 'Form Backend API is running',
+    status: 'online',
+    version: '1.0.0',
+    endpoints: {
+      status: '/status',
+      health: '/health',
+      submit: '/submit-form'
+    },
     timestamp: new Date().toISOString()
   });
 });

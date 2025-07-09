@@ -90,12 +90,12 @@ function App() {
 
   const testConnection = async () => {
     try {
-      const apiUrl = `${getApiUrl()}/`;
+      const apiUrl = `${getApiUrl()}/status`;
       const response = await fetch(apiUrl);
       const data = await response.json();
       setResponse({
         success: true,
-        message: `API is live! ${data.message} - Status: ${data.status}`,
+        message: `API Status: ${data.status} - ${data.message} (v${data.version})`,
       });
     } catch (error) {
       setResponse({
@@ -120,7 +120,7 @@ function App() {
               onClick={testConnection}
               className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-semibold"
             >
-              🚀 Test Live API
+              🚀 Test API Status
             </button>
             <div className="px-6 py-3 bg-blue-100 rounded-lg text-sm text-blue-800 font-mono">
               🌐 Live API: {getApiUrl()}
@@ -351,6 +351,8 @@ function App() {
             <div className="mt-8 p-4 bg-gray-50 rounded-lg">
               <h4 className="font-semibold text-gray-900 mb-2">Using this API from another site:</h4>
               <div className="text-sm text-gray-600 space-y-2">
+                <p><strong>Status:</strong> <code className="bg-white px-2 py-1 rounded">{getApiUrl()}/status</code></p>
+                <p><strong>Health:</strong> <code className="bg-white px-2 py-1 rounded">{getApiUrl()}/health</code></p>
                 <p><strong>Endpoint:</strong> <code className="bg-white px-2 py-1 rounded">{getApiUrl()}/submit-form</code></p>
                 <p><strong>Method:</strong> POST</p>
                 <p><strong>Content-Type:</strong> application/json</p>

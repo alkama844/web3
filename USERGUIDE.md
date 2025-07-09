@@ -9,6 +9,12 @@ This API allows you to submit forms from any website and receive emails via Gmai
 https://your-render-app.onrender.com
 ```
 
+### API Status
+```bash
+GET /status
+```
+Returns detailed API information, version, and available endpoints.
+
 ### Health Check
 ```bash
 GET /health
